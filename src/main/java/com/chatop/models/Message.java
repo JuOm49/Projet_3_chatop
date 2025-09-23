@@ -1,0 +1,36 @@
+package com.chatop.models;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
+//@Data is a Lombok annotation that generates getters, setters, toString, equals, and hashCode methods.
+@Data
+@Entity
+@Table(name="messages")
+public class Message {
+    @Id
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name="rental_id", nullable = true)
+    private Rental rentalId;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name="user_id", nullable = true)
+    private User userId;
+
+    private String message;
+
+    @CreationTimestamp
+    @Column(name="created_at")
+    private LocalDateTime createdAt;
+
+    @CreationTimestamp
+    @Column(name="updated_at")
+    private LocalDateTime updatedAt;
+
+}
