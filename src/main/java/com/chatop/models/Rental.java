@@ -1,5 +1,6 @@
 package com.chatop.models;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,7 +22,7 @@ public class Rental {
     private float surface;
 
     private float price;
-
+    
     private String picture;
 
     private String description;
