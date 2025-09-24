@@ -4,7 +4,6 @@ import com.chatop.models.User;
 import com.chatop.repositories.UserRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.stream.StreamSupport;
@@ -27,11 +26,9 @@ public class UserService {
 
     public User saveUser(final User newUser) {
         Optional<User> userFind = findByEmail(newUser.getEmail());
-
         if (userFind.isPresent()) {
             throw new IllegalArgumentException("User already exists.");
         }
-
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
         return userRepository.save(newUser);
@@ -46,5 +43,4 @@ public class UserService {
     private Iterable<User> getUsers() {
         return userRepository.findAll();
     }
-
 }
