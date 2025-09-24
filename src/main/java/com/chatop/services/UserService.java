@@ -26,18 +26,21 @@ public class UserService {
     }
 
     public User saveUser(final User newUser) {
-        //vérification du user avec requête faite avec getUsers, si ok
-        //return save(user) sinon retourner un message d'erreur.
-        boolean hasUserWithEmail =  StreamSupport.stream(getUsers().spliterator(), false)
-                .anyMatch(user -> user.getEmail().equals(newUser.getEmail()));
+        Optional<User> userFind = findByEmail(newUser.getEmail());
 
-        if (hasUserWithEmail) {
-            throw new IllegalArgumentException("User with id " + newUser.getId() + " already exists.");
+        if (userFind.isPresent()) {
+            throw new IllegalArgumentException("User already exists.");
         }
 
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
         return userRepository.save(newUser);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return StreamSupport.stream(getUsers().spliterator(), false)
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst();
     }
 
     private Iterable<User> getUsers() {
