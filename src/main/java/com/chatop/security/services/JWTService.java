@@ -21,9 +21,8 @@ import java.time.temporal.ChronoUnit;
 public class JWTService {
     @Value("${jwt.secret}")
     private String jwtSecret;
-    private final long jwtExpiration = 864000000;
 
-    private JwtEncoder jwtEncoder;
+    private final JwtEncoder jwtEncoder;
 
     public JWTService(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;

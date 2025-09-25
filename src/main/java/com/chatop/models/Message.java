@@ -18,11 +18,11 @@ public class Message {
 
     @ManyToOne(optional = false)
     @JoinColumn(name="rental_id", nullable = true)
-    private Rental rentalId;
+    private Rental rental;
 
     @ManyToOne(optional = false)
     @JoinColumn(name="user_id", nullable = true)
-    private User userId;
+    private User user;
 
     private String message;
 

@@ -5,6 +5,9 @@ import com.chatop.services.UserService;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 
 import lombok.Data;
@@ -15,9 +18,13 @@ import java.util.List;
 @Service
 public class AuthenticationService {
 
+    private JwtDecoder jwtDecoder;
+    private JWTService jwtService;
     private UserService userService;
 
-    public AuthenticationService(UserService userService) {
+    public AuthenticationService(JwtDecoder jwtDecoder, JWTService jwtService, UserService userService) {
+        this.jwtDecoder = jwtDecoder;
+        this.jwtService = jwtService;
         this.userService = userService;
     }
 
@@ -41,5 +48,18 @@ public class AuthenticationService {
                 null,
                 List.of()
         );
+    }
+
+    public User handleUserFromToken(String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        Jwt jwt = this.jwtDecoder.decode(token);
+        String userMail = this.jwtService.getUserMailFromToken(jwt);
+
+        if (userMail == null) {
+            throw new UsernameNotFoundException("User email not found in token");
+        }
+
+        return this.userService.findByEmail(userMail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

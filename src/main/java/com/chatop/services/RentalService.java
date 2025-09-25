@@ -5,14 +5,12 @@ import com.chatop.dto.RentalDto;
 import com.chatop.models.Rental;
 import com.chatop.models.User;
 import com.chatop.repositories.RentalRepository;
-import com.chatop.security.services.JWTService;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.annotation.Nullable;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
@@ -20,45 +18,16 @@ import java.time.LocalDateTime;
 @Service
 public class RentalService {
 
-    @Autowired
-    private RentalRepository rentalRepository;
+    private final RentalRepository rentalRepository;
+    private final UserService userService;
 
-    private JwtDecoder jwtDecoder;
-    private JWTService jwtService;
-    private UserService userService;
-
-    public RentalService(JwtDecoder jwtDecoder, JWTService jwtService, UserService userService) {
-        this.jwtService = jwtService;
-        this.jwtDecoder = jwtDecoder;
+    public RentalService(RentalRepository rentalRepository, UserService userService) {
+        this.rentalRepository = rentalRepository;
         this.userService = userService;
     }
 
-    public User handleUserFromToken(String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        Jwt jwt = this.jwtDecoder.decode(token);
-        String userMail = this.jwtService.getUserMailFromToken(jwt);
-
-        if (userMail == null) {
-            throw new UsernameNotFoundException("User email not found in token");
-        }
-
-        return this.userService.findByEmail(userMail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-
-    public RentalDto handleRentalDto(@Nullable Long id, String name, float surface, float price, org.springframework.web.multipart.MultipartFile picture, String description, User owner) {
-        RentalDto rentalDto = new RentalDto();
-        if(id != null){
-            rentalDto.setId(id);
-        }
-        rentalDto.setName(name);
-        rentalDto.setSurface(surface);
-        rentalDto.setPrice(price);
-        rentalDto.setPicture(picture.getOriginalFilename());
-        rentalDto.setDescription(description);
-        rentalDto.setOwnerId(owner.getId());
-        return rentalDto;
+    public Iterable<Rental> getAllRentals() {
+        return rentalRepository.findAll();
     }
 
     public Rental getRentalById(Long id) {
@@ -69,7 +38,7 @@ public class RentalService {
         if(rentalDto.getPicture().isEmpty() || rentalDto.getOwnerId() == null || rentalDto.getName().isEmpty()){
             throw new IllegalArgumentException("Missing required rental information.");
         }
-        User owner = this.userService.getUser(rentalDto.getOwnerId())
+        User owner = this.userService.getUserById(rentalDto.getOwnerId())
                 .orElseThrow(() -> new IllegalArgumentException("Owner not found with ID: " + rentalDto.getOwnerId()));
 
         Rental rental;
@@ -99,5 +68,33 @@ public class RentalService {
         }
 
         return new SurfacePriceDto(surfaceFloat, priceFloat);
+    }
+
+    public RentalDto conversionRentalToRentalDto(Rental rental) {
+        RentalDto rentalDto = new RentalDto();
+        rentalDto.setId(rental.getId());
+        rentalDto.setName(rental.getName());
+        rentalDto.setSurface(rental.getSurface());
+        rentalDto.setPrice(rental.getPrice());
+        rentalDto.setPicture(rental.getPicture());
+        rentalDto.setDescription(rental.getDescription());
+        rentalDto.setOwnerId(rental.getOwner().getId());
+        rentalDto.setCreatedAt(rental.getCreatedAt());
+        rentalDto.setUpdatedAt(rental.getUpdatedAt());
+        return rentalDto;
+    }
+
+    public RentalDto handleRentalDto(@Nullable Long id, String name, float surface, float price, MultipartFile picture, String description, User owner) {
+        RentalDto rentalDto = new RentalDto();
+        if(id != null){
+            rentalDto.setId(id);
+        }
+        rentalDto.setName(name);
+        rentalDto.setSurface(surface);
+        rentalDto.setPrice(price);
+        rentalDto.setPicture(picture.getOriginalFilename());
+        rentalDto.setDescription(description);
+        rentalDto.setOwnerId(owner.getId());
+        return rentalDto;
     }
 }

@@ -1,26 +1,30 @@
 package com.chatop.services;
 
+import com.chatop.dto.UserDto;
 import com.chatop.models.User;
 import com.chatop.repositories.UserRepository;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.stream.StreamSupport;
 
+import lombok.Data;
+
+import java.util.stream.StreamSupport;
 import java.util.Optional;
 
 @Data
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-    public Optional<User> getUser(final Long id) {
+    public Optional<User> getUserById(final Long id) {
         return userRepository.findById(id);
     }
 
@@ -38,6 +42,17 @@ public class UserService {
         return StreamSupport.stream(getUsers().spliterator(), false)
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst();
+    }
+
+    public UserDto conversionUserToUserDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setName(user.getName());
+        userDto.setCreatedAt(user.getCreatedAt());
+        userDto.setUpdatedAt(user.getUpdatedAt());
+
+        return userDto;
     }
 
     private Iterable<User> getUsers() {
