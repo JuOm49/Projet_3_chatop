@@ -1,17 +1,14 @@
 package com.chatop.security.controllers;
 
+import com.chatop.dto.UserDto;
 import com.chatop.models.User;
 import com.chatop.security.services.AuthenticationService;
 import com.chatop.security.services.JWTService;
 import com.chatop.services.UserService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -19,16 +16,30 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private AuthenticationService authenticationService;
-
+    private final UserService userService;
+    private final AuthenticationService authenticationService;
     private final JWTService jwtService;
 
-    public AuthenticationController(JWTService jwtService) {
+    public AuthenticationController(UserService userService, AuthenticationService authenticationService, JWTService jwtService) {
+        this.userService = userService;
+        this.authenticationService = authenticationService;
         this.jwtService = jwtService;
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> me(@RequestHeader("Authorization") String authorizationHeader) {
+        User owner = authenticationService.handleUserFromToken(authorizationHeader);
+
+        if (owner == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        UserDto userDto = userService.conversionUserToUserDto(owner);
+        if (userDto == null) {
+            return ResponseEntity.status(400).build();
+        }
+
+        return ResponseEntity.ok(userDto);
     }
 
     @PostMapping("/register")
