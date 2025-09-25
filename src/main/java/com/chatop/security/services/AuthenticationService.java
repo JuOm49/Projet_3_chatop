@@ -2,10 +2,12 @@ package com.chatop.security.services;
 
 import com.chatop.models.User;
 import com.chatop.services.UserService;
-import lombok.Data;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import lombok.Data;
 
 import java.util.List;
 
