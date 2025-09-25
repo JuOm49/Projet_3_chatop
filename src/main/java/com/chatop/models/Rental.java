@@ -1,9 +1,9 @@
 package com.chatop.models;
 
-import jakarta.annotation.Nullable;
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -27,8 +27,8 @@ public class Rental {
 
     private String description;
 
-    // Pour bénificier de la relation ManyToOne,
-    // il faut que la classe User soit une entité JPA
+    // To benefit from the ManyToOne relationship,
+    // the user class must be a JPA entity
     @ManyToOne(optional = false)
     @JoinColumn(name="owner_id", nullable = false)
     private User owner;

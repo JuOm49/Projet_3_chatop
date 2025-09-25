@@ -5,6 +5,7 @@ import com.chatop.dto.SurfacePriceDto;
 import com.chatop.models.Rental;
 import com.chatop.models.User;
 import com.chatop.services.RentalService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,31 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api")
 public class RentalController {
 
     @Autowired
     private RentalService rentalService;
+
+    @GetMapping("/rentals/{id}")
+    public ResponseEntity<RentalDto> getRental(@PathVariable Long id) {
+        Rental rental = rentalService.getRentalById(id);
+        if (rental == null) {
+            return ResponseEntity.notFound().build();
+        }
+        RentalDto rentalDto = new RentalDto();
+        rentalDto.setId(rental.getId());
+        rentalDto.setName(rental.getName());
+        rentalDto.setSurface(rental.getSurface());
+        rentalDto.setPrice(rental.getPrice());
+        rentalDto.setPicture(rental.getPicture());
+        rentalDto.setDescription(rental.getDescription());
+        rentalDto.setOwnerId(rental.getOwner().getId());
+        rentalDto.setCreatedAt(rental.getCreatedAt());
+        rentalDto.setUpdatedAt(rental.getUpdatedAt());
+
+        return ResponseEntity.ok(rentalDto);
+    }
 
     @PostMapping("/rentals")
     public ResponseEntity<Map<String, String>> createRental(

@@ -1,6 +1,7 @@
 package com.chatop.security.configurations;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,7 @@ public class SpringSecurityConfig {
         return  http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/auth/login", "/auth/register").permitAll().anyRequest().authenticated())
+                        auth.requestMatchers("/api/auth/login", "/api/auth/register").permitAll().anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())).build();
     }
 
