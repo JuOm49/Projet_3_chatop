@@ -49,8 +49,8 @@ public class UserService {
         userDto.setId(user.getId());
         userDto.setEmail(user.getEmail());
         userDto.setName(user.getName());
-        userDto.setCreatedAt(user.getCreatedAt());
-        userDto.setUpdatedAt(user.getUpdatedAt());
+        userDto.setCreated_at(user.getCreatedAt());
+        userDto.setUpdated_at(user.getUpdatedAt());
 
         return userDto;
     }

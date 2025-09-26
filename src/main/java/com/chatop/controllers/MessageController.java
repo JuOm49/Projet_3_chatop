@@ -22,7 +22,7 @@ public class MessageController {
     @PostMapping("/messages")
     public ResponseEntity<Map<String, String>> createMessage(@RequestBody MessageDto messageDto) {
 
-        if(messageDto.getRentalId() == null || messageDto.getMessage().isEmpty() || messageDto.getUserId() == null) {
+        if(messageDto.getRental_id() == null || messageDto.getMessage().isEmpty() || messageDto.getUser_id() == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "Message, UserId and RentalId are required."));
         }
 
