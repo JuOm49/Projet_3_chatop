@@ -27,6 +27,7 @@ public class RentalService {
 
     private final RentalRepository rentalRepository;
     private final UserService userService;
+
     @Value("${app.images.base-url}")
     private String imagesBaseUrl;
 
@@ -60,6 +61,7 @@ public class RentalService {
             rental = new Rental();
         }
 
+        // Save the image file in the images directory
         saveImage(rentalDto.getPicture());
 
         rental.setName(rentalDto.getName());
@@ -86,8 +88,6 @@ public class RentalService {
             rental = new Rental();
         }
 
-        //saveImage(rentalDto.getPicture());
-
         rental.setName(rentalDto.getName());
         rental.setSurface(rentalDto.getSurface());
         rental.setPrice(rentalDto.getPrice());
@@ -97,7 +97,8 @@ public class RentalService {
         rentalRepository.save(rental);
     }
 
-    public SurfacePriceDto conversionStringToFloatForSurfaceAndPrice(String surface, String price) {
+    public SurfacePriceDto convertStringToFloatForSurfaceAndPrice(String surface, String price) {
+        // Replace comma with dot for decimal conversion
         float surfaceFloat = Float.parseFloat(surface.replace(',', '.'));
         float priceFloat = Float.parseFloat(price.replace(',', '.'));
         if (surfaceFloat <= 0 || priceFloat <= 0 || Float.isNaN(surfaceFloat) || Float.isNaN(priceFloat)) {
@@ -107,18 +108,18 @@ public class RentalService {
         return new SurfacePriceDto(surfaceFloat, priceFloat);
     }
 
-    public ReturnRentalDto conversionRentalToRentalDto(Rental rental) {
-        ReturnRentalDto rentalDto = new ReturnRentalDto();
-        rentalDto.setId(rental.getId());
-        rentalDto.setName(rental.getName());
-        rentalDto.setSurface(rental.getSurface());
-        rentalDto.setPrice(rental.getPrice());
-        rentalDto.setPicture(rental.getPicture());
-        rentalDto.setDescription(rental.getDescription());
-        rentalDto.setOwner_id(rental.getOwner().getId());
-        rentalDto.setCreated_at(rental.getCreatedAt());
-        rentalDto.setUpdated_at(rental.getUpdatedAt());
-        return rentalDto;
+    public ReturnRentalDto convertToReturnRentalDto(Rental rental) {
+        ReturnRentalDto returnRentalDto = new ReturnRentalDto();
+        returnRentalDto.setId(rental.getId());
+        returnRentalDto.setName(rental.getName());
+        returnRentalDto.setSurface(rental.getSurface());
+        returnRentalDto.setPrice(rental.getPrice());
+        returnRentalDto.setPicture(rental.getPicture());
+        returnRentalDto.setDescription(rental.getDescription());
+        returnRentalDto.setOwner_id(rental.getOwner().getId());
+        returnRentalDto.setCreated_at(rental.getCreatedAt());
+        returnRentalDto.setUpdated_at(rental.getUpdatedAt());
+        return returnRentalDto;
     }
 
     public RentalDto handleRentalDto(@Nullable Long id, String name, float surface, float price, @Nullable  MultipartFile picture, String description, User owner) {

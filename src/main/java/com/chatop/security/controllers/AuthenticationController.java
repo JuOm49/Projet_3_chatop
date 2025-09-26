@@ -1,5 +1,6 @@
 package com.chatop.security.controllers;
 
+import com.chatop.dto.UserAuthDto;
 import com.chatop.dto.UserDto;
 import com.chatop.models.User;
 import com.chatop.security.services.AuthenticationService;
@@ -34,7 +35,7 @@ public class AuthenticationController {
             return ResponseEntity.status(401).build();
         }
 
-        UserDto userDto = userService.conversionUserToUserDto(owner);
+        UserDto userDto = userService.convertToUserDto(owner);
         if (userDto == null) {
             return ResponseEntity.status(400).build();
         }
@@ -43,16 +44,19 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> Register(@RequestBody User user){
-        User newUser = userService.saveUser(user);
+    public ResponseEntity<Map<String, String>> Register(@RequestBody UserAuthDto userAuthDto){
+        User newUser = userService.saveUser(userAuthDto);
         Authentication authentication = authenticationService.handleUsernamePasswordAuthenticationToken(newUser);
 
         return ResponseEntity.ok(Map.of("token", jwtService.generateToken(authentication)));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> Login(@RequestBody User user){
-        User userLogin = userService.findByEmail(user.getEmail()).orElse(null);
+    public ResponseEntity<Map<String, String>> Login(@RequestBody UserAuthDto userAuthDto){
+        User userLogin = userService.findByEmail(userAuthDto.getEmail()).orElse(null);
+
+        User user = userService.userAuthDtoToUser(userAuthDto);
+
         Authentication authentication = authenticationService.handleUsernamePasswordAuthenticationToken(userLogin, user);
 
         return ResponseEntity.ok(Map.of("token", jwtService.generateToken(authentication)));
