@@ -47,7 +47,7 @@ public class RentalController {
         List<ReturnRentalDto> rentalsDto = new ArrayList<ReturnRentalDto>();
 
         rentals.forEach(rental->
-                rentalsDto.add(rentalService.conversionRentalToRentalDto(rental)));
+                rentalsDto.add(rentalService.convertToReturnRentalDto(rental)));
 
         return ResponseEntity.ok(Map.of("rentals",rentalsDto));
     }
@@ -58,9 +58,9 @@ public class RentalController {
         if (rental == null) {
             return ResponseEntity.notFound().build();
         }
-        ReturnRentalDto rentalDto = rentalService.conversionRentalToRentalDto(rental);
+        ReturnRentalDto returnRentalDto = rentalService.convertToReturnRentalDto(rental);
 
-        return ResponseEntity.ok(rentalDto);
+        return ResponseEntity.ok(returnRentalDto);
     }
 
     @PostMapping("/rentals")
@@ -73,7 +73,7 @@ public class RentalController {
             @RequestParam("description") String description
 
     ) {
-        SurfacePriceDto surfacePriceDto  = rentalService.conversionStringToFloatForSurfaceAndPrice(surface, price);
+        SurfacePriceDto surfacePriceDto  = rentalService.convertStringToFloatForSurfaceAndPrice(surface, price);
 
         User owner = authenticationService.handleUserFromToken(authorizationHeader);
         RentalDto rentalDto = rentalService.handleRentalDto(null, name, surfacePriceDto.getSurface(), surfacePriceDto.getPrice(), picture, description, owner);
@@ -96,7 +96,7 @@ public class RentalController {
             @RequestParam("price") String price,
             @RequestParam("description") String description
     ) {
-        SurfacePriceDto surfacePriceDto  = rentalService.conversionStringToFloatForSurfaceAndPrice(surface, price);
+        SurfacePriceDto surfacePriceDto  = rentalService.convertStringToFloatForSurfaceAndPrice(surface, price);
 
         User owner = authenticationService.handleUserFromToken(authorizationHeader);
         Rental rentalExist = rentalService.getRentalById(id);

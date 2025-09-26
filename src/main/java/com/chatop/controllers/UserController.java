@@ -23,7 +23,7 @@ public class UserController {
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         return userService.getUserById(id).map(
                 user -> {
-                    UserDto userDto = userService.conversionUserToUserDto(user);
+                    UserDto userDto = userService.convertToUserDto(user);
                     return ResponseEntity.ok(userDto);
                 }
         ).orElse(ResponseEntity.notFound().build());

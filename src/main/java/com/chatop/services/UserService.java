@@ -1,5 +1,6 @@
 package com.chatop.services;
 
+import com.chatop.dto.UserAuthDto;
 import com.chatop.dto.UserDto;
 import com.chatop.models.User;
 import com.chatop.repositories.UserRepository;
@@ -28,7 +29,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User saveUser(final User newUser) {
+    public User saveUser(final UserAuthDto newRegisterUserDto) {
+
+        User newUser = userAuthDtoToUser(newRegisterUserDto);
+
         Optional<User> userFind = findByEmail(newUser.getEmail());
         if (userFind.isPresent()) {
             throw new IllegalArgumentException("User already exists.");
@@ -44,7 +48,7 @@ public class UserService {
                 .findFirst();
     }
 
-    public UserDto conversionUserToUserDto(User user) {
+    public UserDto convertToUserDto(User user) {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setEmail(user.getEmail());
@@ -53,6 +57,14 @@ public class UserService {
         userDto.setUpdated_at(user.getUpdatedAt());
 
         return userDto;
+    }
+
+    public User userAuthDtoToUser(UserAuthDto registerUserDto) {
+        User user = new User();
+        user.setEmail(registerUserDto.getEmail());
+        user.setName(registerUserDto.getName());
+        user.setPassword(registerUserDto.getPassword());
+        return user;
     }
 
     private Iterable<User> getUsers() {
