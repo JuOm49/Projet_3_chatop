@@ -34,8 +34,8 @@ public class MessageService {
 
     public Message prepareMessageForSave(MessageDto messageDto) {
 
-        Rental rental = rentalService.getRentalById(messageDto.getRentalId());
-        User user = userService.getUserById(messageDto.getUserId()).orElse(null);
+        Rental rental = rentalService.getRentalById(messageDto.getRental_id());
+        User user = userService.getUserById(messageDto.getUser_id()).orElse(null);
 
         if(rental == null || user == null) {
             throw new IllegalArgumentException("Invalid RentalId or UserId.");

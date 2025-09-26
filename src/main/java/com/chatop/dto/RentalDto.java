@@ -1,6 +1,7 @@
 package com.chatop.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -10,9 +11,9 @@ public class RentalDto {
     private String name;
     private float surface;
     private float price;
-    private String picture;
+    private MultipartFile picture;
     private String description;
-    private Long ownerId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Long owner_id;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
 }

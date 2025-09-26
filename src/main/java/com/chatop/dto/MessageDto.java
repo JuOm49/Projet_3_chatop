@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class MessageDto {
     private String message;
-    private Long userId;
-    private Long rentalId;
+    private Long user_id;
+    private Long rental_id;
 }
