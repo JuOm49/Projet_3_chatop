@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.Data;
 
-import java.util.stream.StreamSupport;
 import java.util.Optional;
 
 @Data
@@ -32,6 +31,7 @@ public class UserService {
     public User saveUser(final UserAuthDto newRegisterUserDto) {
 
         User newUser = userAuthDtoToUser(newRegisterUserDto);
+        newUser.setEmail(newUser.getEmail().toLowerCase());
 
         Optional<User> userFind = findByEmail(newUser.getEmail());
         if (userFind.isPresent()) {
@@ -43,9 +43,7 @@ public class UserService {
     }
 
     public Optional<User> findByEmail(String email) {
-        return StreamSupport.stream(getUsers().spliterator(), false)
-                .filter(user -> user.getEmail().equals(email))
-                .findFirst();
+        return userRepository.findByEmail(email);
     }
 
     public UserDto convertToUserDto(User user) {
@@ -65,9 +63,5 @@ public class UserService {
         user.setName(registerUserDto.getName());
         user.setPassword(registerUserDto.getPassword());
         return user;
-    }
-
-    private Iterable<User> getUsers() {
-        return userRepository.findAll();
     }
 }
