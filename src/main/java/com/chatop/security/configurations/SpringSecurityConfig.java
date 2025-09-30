@@ -27,6 +27,16 @@ public class SpringSecurityConfig {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
+    /**
+     * Configures the security filter chain for the application.
+     * Disables CSRF protection, sets session management to stateless,stateless: for no creation of session, just use the token.
+     * and configures authorization rules for various endpoints.
+     * Also sets up JWT-based authentication for OAuth2 resource server.
+     *
+     * @param http the HttpSecurity instance to configure
+     * @return the configured SecurityFilterChain
+     * @throws Exception if an error occurs during configuration
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return  http.csrf(AbstractHttpConfigurer::disable)
@@ -46,6 +56,12 @@ public class SpringSecurityConfig {
         return new NimbusJwtEncoder(new ImmutableSecret<>(this.jwtSecret.getBytes()));
     }
 
+    /**
+     * Configures a JwtDecoder bean using the provided JWT secret.
+     * The decoder is set up to use the HS256 algorithm for decoding JWT tokens.
+     * "RSA" is used in SecretKeySpec but the actual algorithm for JWT is HS256. it's a symmetric key algorithm.
+     * @return the configured JwtDecoder
+     */
     @Bean
     public JwtDecoder jwtDecoder() {
         SecretKeySpec secretKey = new SecretKeySpec(this.jwtSecret.getBytes(), 0, this.jwtSecret.getBytes().length, "RSA");
