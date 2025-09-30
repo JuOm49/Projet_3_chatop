@@ -28,6 +28,13 @@ public class JWTService {
         this.jwtEncoder = jwtEncoder;
     }
 
+    /**
+     * Generates a JWT token for the given authentication.
+     * The token includes the issuer, issued at time, expiration time (1 day), and subject (username).
+     *
+     * @param authentication the authentication object containing user details
+     * @return the generated JWT token as a string
+     */
     public String generateToken(Authentication authentication) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
