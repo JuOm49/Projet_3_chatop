@@ -40,4 +40,11 @@ public class Rental {
     @CreationTimestamp
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    private Message message;
 }
