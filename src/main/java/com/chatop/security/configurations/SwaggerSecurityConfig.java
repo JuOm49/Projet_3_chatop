@@ -1,6 +1,7 @@
 package com.chatop.security.configurations;
 
 import com.chatop.security.services.SwaggerUserDetailsService;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;

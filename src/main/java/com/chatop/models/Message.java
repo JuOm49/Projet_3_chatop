@@ -16,12 +16,20 @@ public class Message {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name="rental_id", nullable = true)
+    @ManyToOne(cascade= {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+        }
+    )
+    @JoinColumn(name="rental_id", nullable = false)
     private Rental rental;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name="user_id", nullable = true)
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+        }
+    )
+    @JoinColumn(name="user_id", nullable = false)
     private User user;
 
     private String message;
