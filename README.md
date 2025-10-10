@@ -1,7 +1,10 @@
 📘 README — Local Installation Guide for chatop API project
 
+
 1. Clone the repository
     git clone ''
+
+
 
 2. Create the database with this script:
 
@@ -47,7 +50,9 @@
 
  ALTER TABLE `MESSAGES` ADD FOREIGN KEY (`rental_id`) REFERENCES `RENTALS` (`id`);
 
- 3. Configure external "application.properties"
+
+
+3. Configure external "application.properties"
     spring.application.name=chatop
     server.port=3001
     spring.datasource.url=jdbc:mysql://localhost:3306/chatop_db
@@ -62,4 +67,18 @@
 
     app.images.base-url=http://localhost:3001/api/images/
     app.images.dir= E:/img-chatop/img
-  
+
+
+
+4. Run the API
+   mvn clean install
+   To launch the application, open the project in your IDE (e.g., IntelliJ) and locate the ChatopApplication class.
+   From there, click the green Run button next to the main() method or use the IDE's run menu to execute ChatopApplication. This will start the Spring Boot application locally.
+   Edit RUN with this: --spring.config.location=[path_of_application.properties_ex:_D:\JAR\configuration\application.properties]
+
+
+
+6. Use Swagger
+   The Swagger documentation for the API is available at: http://localhost:3001/swagger-ui/index.html.
+   You can authenticate using a user token, which must be generated through the API.
+
