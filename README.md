@@ -2,7 +2,7 @@
 
 
 ## 1. Clone the repository
-    git clone ''
+    git clone https://github.com/JuOm49/Projet_3_chatop.git
 
 
 
