@@ -84,6 +84,6 @@ Insert your password, this which is used to access the Chatop_db database — an
 
 
 ## 6. Use Swagger
-   The Swagger documentation for the API is available at: http://localhost:3001/swagger-ui/index.html.
+   The Swagger documentation for the API is available at: http://localhost:3001/swagger-ui/index.html. (accessible only when the API local is running)
    You can authenticate using a user token, which must be generated through the API.
 
