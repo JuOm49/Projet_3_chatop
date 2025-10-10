@@ -1,4 +1,4 @@
-# 📘 README — Local Installation Guide for chatop API project
+# 📘 Local Installation Guide for chatop API project
 
 
 ## 1. Clone the repository
