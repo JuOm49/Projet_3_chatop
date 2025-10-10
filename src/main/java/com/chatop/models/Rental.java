@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 // @Data is a Lombok annotation that generates getters, setters, toString, equals, and hashCode methods.
 @Data
@@ -27,9 +29,7 @@ public class Rental {
 
     private String description;
 
-    // To benefit from the ManyToOne relationship,
-    // the user class must be a JPA entity
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="owner_id", nullable = false)
     private User owner;
 
@@ -41,10 +41,7 @@ public class Rental {
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER
-    )
-    private Message message;
+    @OneToMany(mappedBy = "rental", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> messages = new ArrayList<>();
+
 }
