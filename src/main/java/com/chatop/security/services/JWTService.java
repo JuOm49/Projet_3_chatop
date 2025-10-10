@@ -19,9 +19,7 @@ import java.time.temporal.ChronoUnit;
 @Data
 @Service
 public class JWTService {
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-
+    
     private final JwtEncoder jwtEncoder;
 
     public JWTService(JwtEncoder jwtEncoder) {
