@@ -16,22 +16,6 @@ public class Message {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade= {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-        }
-    )
-    @JoinColumn(name="rental_id", nullable = false)
-    private Rental rental;
-
-    @ManyToOne(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-        }
-    )
-    @JoinColumn(name="user_id", nullable = false)
-    private User user;
-
     private String message;
 
     @CreationTimestamp
@@ -42,4 +26,11 @@ public class Message {
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="rental_id", nullable = false)
+    private Rental rental;
 }
