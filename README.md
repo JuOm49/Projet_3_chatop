@@ -1,12 +1,12 @@
-#📘 README — Local Installation Guide for chatop API project
+# 📘 README — Local Installation Guide for chatop API project
 
 
-##1. Clone the repository
+## 1. Clone the repository
     git clone ''
 
 
 
-##2. Create the database with this script:
+## 2. Create the database with this script:
 
      CREATE DATABASE chatop_db;
      CREATE USER 'chatop'@'localhost' IDENTIFIED BY 'your_password';
@@ -52,8 +52,10 @@
 
 
 
-##3. Configure external "application.properties"
-    
+## 3. Configure external "application.properties"
+Create the application.properties file and add the following lines: [...]
+Insert your password, this which is used to access the Chatop_db database — and also define a jwt.secret, which will be used by the API to encode and decode authentication tokens. 
+
     spring.application.name=chatop
     server.port=3001
     spring.datasource.url=jdbc:mysql://localhost:3306/chatop_db
@@ -71,7 +73,7 @@
 
 
 
-##4. Run the API
+## 4. Run the API
    
     mvn clean install
    
@@ -81,7 +83,7 @@
 
 
 
-##6. Use Swagger
+## 6. Use Swagger
    The Swagger documentation for the API is available at: http://localhost:3001/swagger-ui/index.html.
    You can authenticate using a user token, which must be generated through the API.
 
