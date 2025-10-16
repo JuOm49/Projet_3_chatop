@@ -1,27 +1,31 @@
 package com.chatop.controllers;
 
-import com.chatop.models.User;
+import com.chatop.dto.UserDto;
 import com.chatop.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @GetMapping("/user/{id}")
-    public User getUser(@PathVariable Long id){
-        return userService.getUser(id).orElse(null);
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-//    @PostMapping("/auth/register")
-//    public User registerUser(User newUser){
-//        return userService.saveUser(newUser);
-//    }
-
+    @GetMapping("/user/{id}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        return userService.getUserById(id).map(
+                user -> {
+                    UserDto userDto = userService.convertToUserDto(user);
+                    return ResponseEntity.ok(userDto);
+                }
+        ).orElse(ResponseEntity.notFound().build());
+    }
 }

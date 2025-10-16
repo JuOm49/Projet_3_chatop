@@ -1,13 +1,14 @@
 package com.chatop.services;
 
+import com.chatop.dto.UserAuthDto;
+import com.chatop.dto.UserDto;
 import com.chatop.models.User;
 import com.chatop.repositories.UserRepository;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.stream.StreamSupport;
+
+import lombok.Data;
 
 import java.util.Optional;
 
@@ -15,33 +16,51 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-    public Optional<User> getUser(final Long id) {
+    public Optional<User> getUserById(final Long id) {
         return userRepository.findById(id);
     }
 
-    public User saveUser(final User newUser) {
-        //vérification du user avec requête faite avec getUsers, si ok
-        //return save(user) sinon retourner un message d'erreur.
-        boolean hasUserWithEmail =  StreamSupport.stream(getUsers().spliterator(), false)
-                .anyMatch(user -> user.getEmail().equals(newUser.getEmail()));
+    public User saveUser(final UserAuthDto newRegisterUserDto) {
 
-        if (hasUserWithEmail) {
-            throw new IllegalArgumentException("User with id " + newUser.getId() + " already exists.");
+        User newUser = userAuthDtoToUser(newRegisterUserDto);
+
+        Optional<User> userFind = findByEmail(newUser.getEmail());
+        if (userFind.isPresent()) {
+            throw new IllegalArgumentException("User already exists.");
         }
-
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
         return userRepository.save(newUser);
     }
 
-    private Iterable<User> getUsers() {
-        return userRepository.findAll();
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
+    public UserDto convertToUserDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setName(user.getName());
+        userDto.setCreated_at(user.getCreatedAt());
+        userDto.setUpdated_at(user.getUpdatedAt());
+
+        return userDto;
+    }
+
+    public User userAuthDtoToUser(UserAuthDto registerUserDto) {
+        User user = new User();
+        user.setEmail(registerUserDto.getEmail().toLowerCase());
+        user.setName(registerUserDto.getName());
+        user.setPassword(registerUserDto.getPassword());
+        return user;
+    }
 }

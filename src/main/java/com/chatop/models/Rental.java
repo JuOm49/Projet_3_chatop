@@ -1,10 +1,13 @@
 package com.chatop.models;
 
-import jakarta.persistence.*;
-import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 // @Data is a Lombok annotation that generates getters, setters, toString, equals, and hashCode methods.
 @Data
@@ -21,16 +24,10 @@ public class Rental {
     private float surface;
 
     private float price;
-
+    
     private String picture;
 
     private String description;
-
-    // Pour bénificier de la relation ManyToOne,
-    // il faut que la classe User soit une entité JPA
-    @ManyToOne(optional = false)
-    @JoinColumn(name="owner_id", nullable = false)
-    private User owner;
 
     @CreationTimestamp
     @Column(name="created_at")
@@ -39,4 +36,11 @@ public class Rental {
     @CreationTimestamp
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "rental", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> messages = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="owner_id", nullable = false)
+    private User owner;
 }

@@ -1,8 +1,9 @@
 package com.chatop.models;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -15,14 +16,6 @@ public class Message {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name="rental_id", nullable = true)
-    private Rental rentalId;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name="user_id", nullable = true)
-    private User userId;
-
     private String message;
 
     @CreationTimestamp
@@ -33,4 +26,11 @@ public class Message {
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="rental_id", nullable = false)
+    private Rental rental;
 }

@@ -1,10 +1,13 @@
 package com.chatop.models;
 
-import jakarta.persistence.*;
-import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 //@Data is a Lombok annotation that generates getters, setters, toString, equals, and hashCode methods.
 @Data
@@ -29,4 +32,7 @@ public class User {
     @CreationTimestamp
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rental> rentals = new ArrayList<>();
 }
