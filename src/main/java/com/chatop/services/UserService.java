@@ -31,7 +31,6 @@ public class UserService {
     public User saveUser(final UserAuthDto newRegisterUserDto) {
 
         User newUser = userAuthDtoToUser(newRegisterUserDto);
-        newUser.setEmail(newUser.getEmail().toLowerCase());
 
         Optional<User> userFind = findByEmail(newUser.getEmail());
         if (userFind.isPresent()) {
@@ -59,7 +58,7 @@ public class UserService {
 
     public User userAuthDtoToUser(UserAuthDto registerUserDto) {
         User user = new User();
-        user.setEmail(registerUserDto.getEmail());
+        user.setEmail(registerUserDto.getEmail().toLowerCase());
         user.setName(registerUserDto.getName());
         user.setPassword(registerUserDto.getPassword());
         return user;

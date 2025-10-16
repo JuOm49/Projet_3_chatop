@@ -29,10 +29,6 @@ public class Rental {
 
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="owner_id", nullable = false)
-    private User owner;
-
     @CreationTimestamp
     @Column(name="created_at")
     private LocalDateTime createdAt;
@@ -44,4 +40,7 @@ public class Rental {
     @OneToMany(mappedBy = "rental", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="owner_id", nullable = false)
+    private User owner;
 }
